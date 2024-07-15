@@ -40,7 +40,7 @@ def main():
     depth = int(sys.argv[2])
     board = [c for c in startingBoard]
 
-    op = MiniMaxGame(PosList(board), depth, True)
+    op = MiniMaxGame(board, depth, True)
 
     result = f"Board Position: {op.list}\nPositions evaluated by static estimation: {op.count}\nMINIMAX estimate: {op.val}\ndepth: {depth}"
     with open(sys.argv[3], 'w') as writer:
