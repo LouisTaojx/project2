@@ -177,30 +177,42 @@ def generate_moves_midgame_endgame_for_black(board):
 
 def static_estimation_opening_improved(board):
     c= Counter(board)
-    return possible_mill_count(board, 'W') + c['W'] - c['B']
+    piecediff = c['W'] - c['B']
+    whiteMobility = len(get_all_possible_moves(board, 'W', 'opening'))
+    blackMobility = len(get_all_possible_moves(board, 'B', 'opening'))
+    return piecediff + 0.5 * (whiteMobility - blackMobility)
 
 def static_estimation_midgame_endgame_improved(board):
-    white_num = board.get_piece_count('W')
-    black_num = board.get_piece_count('B')
-    list_ = generate_moves_midgame_endgame_for_black(board)
-    num_black_moves = len(list_)
-    possible_mill_count_ = possible_mill_count(board, 'W')
-    if black_num <= 2:
-        return 10000
-    elif white_num <= 2:
-        return -10000
-    elif num_black_moves == 0:
-        return 10000
+    c = Counter(board)
+    white_num = c['W']
+    black_num = c['B']
+    piecediff = white_num - black_num
+    whiteMobility = len(get_all_possible_moves(board, 'W', 'midgame'))
+    blackMobility = len(get_all_possible_moves(board, 'B', 'midgame'))
+    return int(piecediff + (whiteMobility - blackMobility))
+
+def get_all_possible_moves(board, player, phase = 'opening'):
+    moves = []
+    if phase == 'opening':
+        # In the opening phase, all empty spots are potential moves
+        for i, spot in enumerate(board):
+            if spot == 'x':  
+                moves.append(i) 
     else:
-        return 1000 * (white_num + possible_mill_count_ - black_num) - num_black_moves
+        # In midgame/endgame, moves depend on the player's pieces
+        for i, spot in enumerate(board):
+            if spot == player:
+                if player_has_only_three_pieces(board, player):  
+                    # Player can jump to any empty spot
+                    for j, potential_spot in enumerate(board):
+                        if potential_spot == 'x':
+                            moves.append((i, j))  # Move from i to j
+                else:
+                    # Move to adjacent spots
+                    for adj in get_neighbors(i): 
+                        if board[adj] == 'x':
+                            moves.append((i, adj))  # Move from i to adj
+    return moves
 
-
-def possible_mill_count(board, t):
-    count = 0
-    for i, p in enumerate(board.pos_list):
-        if p == t:
-            global check_possible_mill
-            check_possible_mill = True
-            if check_for_mills(board, p, i):
-                count += 1
-    return count
+def player_has_only_three_pieces(board, player):
+    return board.count(player) == 3
