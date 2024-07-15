@@ -1,0 +1,4 @@
+Board Position: []
+Positions evaluated by static estimation: 0
+MINIMAX estimate: -inf
+depth: 2
