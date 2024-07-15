@@ -1,8 +1,11 @@
 import sys
-from typing import List
 import Utility
-from Utility import *
 
+class BoardOut:
+    def __init__(self):
+        self.count = 0
+        self.val = 0
+        self.list = []
 
 def MinMaxOpening(board, depth, is_max):
     out = BoardOut()

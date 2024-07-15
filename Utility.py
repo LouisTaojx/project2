@@ -1,12 +1,6 @@
 from collections import Counter
 import copy
 
-class BoardOut:
-    def __init__(self):
-        self.count = 0
-        self.val = 0
-        self.list = []
-
 ############################################################################################################
 # utility functions start:
 ############################################################################################################
@@ -49,30 +43,26 @@ def get_neighbors(i):
 def check_for_mills(i, l):
     t = l[i]
     switcher = {
-        0: is_a_mill(l, t, 2, 4),
-        1: is_a_mill(l, t, 3, 5) or is_a_mill(l, t, 8, 17),
-        2: is_a_mill(l, t, 0, 4),
-        3: is_a_mill(l, t, 1, 5) or is_a_mill(l, t, 7, 14),
-        4: is_a_mill(l, t, 0, 2),
-        5: is_a_mill(l, t, 1, 3) or is_a_mill(l, t, 6, 11),
-        6: is_a_mill(l, t, 5, 11) or is_a_mill(l, t, 7, 8),
-        7: is_a_mill(l, t, 6, 8) or is_a_mill(l, t, 3, 14),
-        8: is_a_mill(l, t, 6, 7) or is_a_mill(l, t, 1, 17),
-        9: is_a_mill(l, t, 10, 11) or is_a_mill(l, t, 12, 15),
-        10: is_a_mill(l, t, 9, 11) or is_a_mill(l, t, 13, 16),
-        11: is_a_mill(l, t, 9, 10) or is_a_mill(l, t, 14, 17) or is_a_mill(l, t, 5, 6),
-        12: is_a_mill(l, t, 13, 14) or is_a_mill(l, t, 9, 15),
-        13: is_a_mill(l, t, 12, 14) or is_a_mill(l, t, 10, 16),
-        14: is_a_mill(l, t, 12, 13) or is_a_mill(l, t, 11, 17) or is_a_mill(l, t, 3, 7),
-        15: is_a_mill(l, t, 16, 17) or is_a_mill(l, t, 9, 12),
-        16: is_a_mill(l, t, 15, 17) or is_a_mill(l, t, 10, 13),
-        17: is_a_mill(l, t, 15, 16) or is_a_mill(l, t, 11, 14) or is_a_mill(l, t, 1, 8),
+        0: l[2] == t and l[4] == t,
+        1: (l[3] == t and l[5] == t) or (l[8] == t and l[17] == t),
+        2: l[0] == t and l[4] == t,
+        3: (l[1] == t and l[5] == t) or (l[7] == t and l[14] == t),
+        4: l[0] == t and l[2] == t,
+        5: (l[1] == t and l[3] == t) or (l[6] == t and l[11] == t),
+        6: (l[5] == t and l[11] == t) or (l[7] == t and l[8] == t),
+        7: (l[6] == t and l[8] == t) or (l[3] == t and l[14] == t),
+        8: (l[6] == t and l[7] == t) or (l[1] == t and l[17] == t),
+        9: (l[10] == t and l[11] == t) or (l[12] == t and l[15] == t),
+        10: (l[9] == t and l[11] == t) or (l[13] == t and l[16] == t),
+        11: (l[9] == t and l[10] == t) or (l[14] == t and l[17] == t) or (l[5] == t and l[6] == t),
+        12: (l[13] == t and l[14] == t) or (l[9] == t and l[15] == t),
+        13: (l[12] == t and l[14] == t) or (l[10] == t and l[16] == t),
+        14: (l[12] == t and l[13] == t) or (l[11] == t and l[17] == t) or (l[3] == t and l[7] == t),
+        15: (l[16] == t and l[17] == t) or (l[9] == t and l[12] == t),
+        16: (l[15] == t and l[17] == t) or (l[10] == t and l[13] == t),
+        17: (l[15] == t and l[16] == t) or (l[11] == t and l[14] == t) or (l[1] == t and l[8] == t),
     }
     return switcher.get(i, False)
-
-# input : list: board, str: t, int: index1, int: index2
-def is_a_mill(board, piece_type, index1, index2, reset_mill_check=False):
-    return board[index1] == piece_type and board[index2] == piece_type
 
 def generate_add(board):
     l1 = []
@@ -134,9 +124,7 @@ def generate_move(board):
     return list1
 
 ############################################################################################################
-# Question 1 - 
-# Part1:  
-# MinMaxOpening.py
+# Called by [ MinMaxOpening.py, ABOpening.py,
 ############################################################################################################
 
 # input board is a list of Position(['x', 'W', 'B'])
@@ -154,9 +142,7 @@ def generate_moves_opening_for_black(board):
     return b_moves
 
 ############################################################################################################
-# Question 1 - 
-# Part2: 
-# MinMaxGame.py
+# Called by [ MinMaxGame.py, ABGame.py, 
 ############################################################################################################
 
 def static_estimation_midgame_endgame(board):
@@ -174,7 +160,6 @@ def static_estimation_midgame_endgame(board):
     else:
         return 1000 * (white_num - black_num) - num_black_moves
 
-
 def generate_moves_midgame_endgame(board):
     piece = board.count('W')
     if piece == 3:
@@ -182,26 +167,12 @@ def generate_moves_midgame_endgame(board):
     else:
         return generate_move(board)
 
-
 def generate_moves_midgame_endgame_for_black(board):
     temp_board = swap_board(board)
     b_moves = generate_moves_midgame_endgame(temp_board)
     for i, move in enumerate(b_moves):
         b_moves[i] = swap_board(move)
     return b_moves
-
-############################################################################################################
-# Question 2 - 
-# Part1:
-# ABOpening.py
-############################################################################################################
-
-############################################################################################################
-# Question 2 - 
-# Part2:
-# ABGame.py
-############################################################################################################
-
 
 
 # def static_estimation_opening_improved(board):

@@ -1,4 +1,0 @@
-Board Position: ['x', 'W', 'x', 'W', 'x', 'W', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'B', 'x', 'x', 'x']
-Positions evaluated by static estimation: 197
-MINIMAX estimate: 1
-depth: 2

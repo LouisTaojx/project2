@@ -1,6 +1,11 @@
 import sys
-from Utility import *
 import Utility
+
+class BoardOut:
+    def __init__(self):
+        self.count = 0
+        self.val = 0
+        self.list = []
 
 def MiniMaxGame(board, depth, isMax):
     out = BoardOut()
