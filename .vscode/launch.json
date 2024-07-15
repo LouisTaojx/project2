@@ -14,7 +14,7 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal",
-            "args": ["output/board.txt", "2", "output/board_out.txt"]
+            "args": ["output/board.txt", "3", "output/board_out.txt"]
         }
     ]
 }

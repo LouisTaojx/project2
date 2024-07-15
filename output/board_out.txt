@@ -1,4 +1,4 @@
-Board Position: ['x', 'B', 'B', 'x', 'x', 'x', 'x', 'x', 'x', 'W', 'x', 'x', 'B', 'W', 'B', 'x', 'x', 'W']
-Positions evaluated by static estimation: 102
-αβ estimate: -1011
+Board Position: WxWxxxxxxxxxxxxxxB
+Positions evaluated by static estimation: 30
+ αβ estimate: 0
 depth: 2
