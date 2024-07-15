@@ -1,18 +1,18 @@
 import sys
-import Utility
+from Utility import static_estimation_for_opening, generate_add, generate_moves_opening_for_black
 # for improving the performance of the code, I did some optimization. 
 def MinMaxOpening(board, depth, is_max):
 	if depth == 0:
-		val = Utility.static_estimation_for_opening(board)
+		val = static_estimation_for_opening(board)
 		return (1, val, board)  # count, val, list
 
 	best_move = None
 	if is_max:
 		best_val = -float('inf')
-		moves = Utility.generate_add(board)
+		moves = generate_add(board)
 	else:
 		best_val = float('inf')
-		moves = Utility.generate_moves_opening_for_black(board)
+		moves = generate_moves_opening_for_black(board)
 
 	total_count = 0
 	for current_move in moves:

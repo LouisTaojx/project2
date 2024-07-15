@@ -5,7 +5,7 @@ def MiniMaxGame(board, depth, isMax):
     if depth == 0:
         return (1, Utility.static_estimation_midgame_endgame(board), [])
 
-    if isMax:
+    if isMax: # is_max == True enter this line
         best_val = float('-inf')
         moves = Utility.generate_moves_midgame_endgame(board)
     else:
@@ -36,8 +36,6 @@ def main():
     board = [c for c in startingBoard]
 
     count, val, best_move = MiniMaxGame(board, depth, True)
-
-    # Convert the board position list to a string for output
     board_position_str = ''.join(best_move)
     result = f"Board Position: {board_position_str}\nPositions evaluated by static estimation: {count}\nMINIMAX estimate: {val}\ndepth: {depth}"
     with open(sys.argv[3], 'w') as writer:

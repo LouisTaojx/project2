@@ -1,4 +1,4 @@
-Board Position: WxWxxxxxxxxxxxxxxB
-Positions evaluated by static estimation: 30
- αβ estimate: 0
+Board Position: WWBBxBxWxBxxWBWxWx
+Positions evaluated by static estimation: 35
+MINIMAX estimate: 994
 depth: 2

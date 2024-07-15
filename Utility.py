@@ -175,31 +175,32 @@ def generate_moves_midgame_endgame_for_black(board):
     return b_moves
 
 
-# def static_estimation_opening_improved(board):
-#     return board.get_piece_count('W') + possible_mill_count(board, 'W') - board.get_piece_count('B')
+def static_estimation_opening_improved(board):
+    c= Counter(board)
+    return possible_mill_count(board, 'W') + c['W'] - c['B']
 
-# def static_estimation_midgame_endgame_improved(board):
-#     white_num = board.get_piece_count('W')
-#     black_num = board.get_piece_count('B')
-#     list_ = generate_moves_midgame_endgame_for_black(board)
-#     num_black_moves = len(list_)
-#     possible_mill_count_ = possible_mill_count(board, 'W')
-#     if black_num <= 2:
-#         return 10000
-#     elif white_num <= 2:
-#         return -10000
-#     elif num_black_moves == 0:
-#         return 10000
-#     else:
-#         return 1000 * (white_num + possible_mill_count_ - black_num) - num_black_moves
+def static_estimation_midgame_endgame_improved(board):
+    white_num = board.get_piece_count('W')
+    black_num = board.get_piece_count('B')
+    list_ = generate_moves_midgame_endgame_for_black(board)
+    num_black_moves = len(list_)
+    possible_mill_count_ = possible_mill_count(board, 'W')
+    if black_num <= 2:
+        return 10000
+    elif white_num <= 2:
+        return -10000
+    elif num_black_moves == 0:
+        return 10000
+    else:
+        return 1000 * (white_num + possible_mill_count_ - black_num) - num_black_moves
 
 
-# def possible_mill_count(board, t):
-#     count = 0
-#     for i, p in enumerate(board.pos_list):
-#         if p == t:
-#             global check_possible_mill
-#             check_possible_mill = True
-#             if check_for_mills(board, p, i):
-#                 count += 1
-#     return count
+def possible_mill_count(board, t):
+    count = 0
+    for i, p in enumerate(board.pos_list):
+        if p == t:
+            global check_possible_mill
+            check_possible_mill = True
+            if check_for_mills(board, p, i):
+                count += 1
+    return count
