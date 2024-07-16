@@ -1,13 +1,13 @@
 import sys
-from Utility import static_estimation_opening_improved, generate_add, generate_moves_opening_for_black
+from Utility import static_evaluation_opening_improved, generate_add_improved, generate_moves_opening_for_black
 
 def MiniMaxOpeningImproved(board, depth, isMax):
     if depth == 0:
-        return (1, static_estimation_opening_improved(board), board)
+        return (1, static_evaluation_opening_improved(board), board)
 
     if isMax:
         val = float('-inf')
-        moves = generate_add(board)
+        moves = generate_add_improved(board)
     else:
         val = float('inf')
         moves = generate_moves_opening_for_black(board)

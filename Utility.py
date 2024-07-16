@@ -76,18 +76,18 @@ def generate_add(board):
                 l1.append(dup)
     return l1
 
-def generate_remove(board, l):
+def generate_remove(board, index):
     count = 0
     for i, p in enumerate(board):
         if p == 'B':
             if not check_for_mills(i, board):
                 dup = board.copy()
                 dup[i] = 'x'
-                l.append(dup)
+                index.append(dup)
                 count += 1
     if count == 0:
-        l.append(board)
-    return l
+        index.append(board)
+    return index
 
 # input: list: board
 # output: list: list of possible moves
@@ -174,13 +174,18 @@ def generate_moves_midgame_endgame_for_black(board):
         b_moves[i] = swap_board(move)
     return b_moves
 
+#####################################################################
+# Part 4 improved
+#####################################################################
+def generate_moves_midgame_endgame_improved(board):
+    return generate_add(board)
 
 def static_estimation_opening_improved(board):
     c= Counter(board)
     piecediff = c['W'] - c['B']
     whiteMobility = len(get_all_possible_moves(board, 'W', 'opening'))
     blackMobility = len(get_all_possible_moves(board, 'B', 'opening'))
-    return piecediff + 0.5 * (whiteMobility - blackMobility)
+    return piecediff + 0.4 * (whiteMobility - blackMobility)
 
 def static_estimation_midgame_endgame_improved(board):
     c = Counter(board)
@@ -216,3 +221,100 @@ def get_all_possible_moves(board, player, phase = 'opening'):
 
 def player_has_only_three_pieces(board, player):
     return board.count(player) == 3
+
+def generate_add_improved(board, transposition_table=None):
+    """
+    Generates all possible moves by adding 'W' to the board and handles mill creation.
+    
+    Parameters:
+    board (list): The current state of the board.
+    transposition_table (dict): A dictionary to store previously computed board states.
+    
+    Returns:
+    list: A list of new board states after adding 'W'.
+    """
+    if transposition_table is None:
+        transposition_table = {}
+
+    board_tuple = tuple(board)
+    if board_tuple in transposition_table:
+        return transposition_table[board_tuple]
+
+    l1 = []
+    for i, piece in enumerate(board):
+        if piece == 'x':  # If the spot is empty
+            board[i] = 'W'  # Temporarily place 'W' to simulate the move
+            if check_for_mills(i, board):
+                # If placing 'W' here creates a mill, handle mill removal
+                l1.extend(generate_remove_improved(board, i, transposition_table))  # Pass the index where the mill was created
+            else:
+                # If no mill is created, add the board state to the list
+                l1.append(board.copy())  # Make a copy of the board for the list
+            board[i] = 'x'  # Undo the move for the next iteration
+
+    # Sort the moves based on their static evaluation scores
+    l1.sort(key=lambda b: static_estimation_opening_improved(b, transposition_table), reverse=True)
+
+    transposition_table[board_tuple] = l1
+    return l1
+
+def generate_remove_improved(board, index, transposition_table):
+    """
+    Removes 'B' pieces from the board that are not part of a mill.
+    
+    Parameters:
+    board (list): The current state of the board.
+    index (int): The index where the mill was created.
+    transposition_table (dict): A dictionary to store previously computed board states.
+    
+    Returns:
+    list: Updated list with new board states.
+    """
+    board_tuple = tuple(board)
+    if board_tuple in transposition_table:
+        return transposition_table[board_tuple]
+
+    count = 0
+    new_boards = []
+    for i, piece in enumerate(board):
+        if piece == 'B':
+            if not check_for_mills(i, board):
+                new_board = board.copy()
+                new_board[i] = 'x'
+                new_boards.append(new_board)
+                count += 1
+
+    if count == 0:
+        new_boards.append(board.copy())
+
+    transposition_table[board_tuple] = new_boards
+    return new_boards
+
+def static_evaluation_opening_improved(board, transposition_table=None):
+    """
+    Evaluates the board state and returns a score.
+    
+    Parameters:
+    board (list): The current state of the board.
+    transposition_table (dict): A dictionary to store previously computed board states.
+    
+    Returns:
+    int: The evaluation score of the board.
+    """
+    if transposition_table is None:
+        transposition_table = {}
+
+    board_tuple = tuple(board)
+    if board_tuple in transposition_table:
+        return transposition_table[board_tuple]
+
+    score = 0
+    for piece in board:
+        if piece == 'W':
+            score += 1  # Each 'W' piece adds to the score
+        elif piece == 'B':
+            score -= 1  # Each 'B' piece subtracts from the score
+
+    # Store the computed score in the transposition table
+    transposition_table[board_tuple] = score
+    return score

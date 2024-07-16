@@ -1,5 +1,5 @@
 import sys
-from Utility import static_estimation_midgame_endgame_improved, generate_moves_midgame_endgame, generate_moves_midgame_endgame_for_black
+from Utility import static_estimation_midgame_endgame_improved, generate_moves_midgame_endgame_improved, generate_moves_midgame_endgame_for_black
 
 def MiniMaxGameImproved(board, depth, isMax):
     if depth == 0:
@@ -7,7 +7,7 @@ def MiniMaxGameImproved(board, depth, isMax):
 
     if isMax:
         val = float('-inf')
-        moves = generate_moves_midgame_endgame(board)
+        moves = generate_moves_midgame_endgame_improved(board)
     else:
         val = float('inf')
         moves = generate_moves_midgame_endgame_for_black(board)
